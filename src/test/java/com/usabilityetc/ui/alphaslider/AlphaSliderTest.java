@@ -1,64 +1,123 @@
 package com.usabilityetc.ui.alphaslider;
 
-import java.awt.*;
+import static org.junit.Assert.*;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import java.util.*;
+
+import org.junit.*;
 
 import com.usabilityetc.ui.alphaslider.AlphaSlider.Orientation;
 
+/**
+ * Unit tests for the AlphaSlider class.
+ *
+ * @author Jeffrey Morgan
+ *
+ */
 public class AlphaSliderTest {
-	public AlphaSliderTest(final int width, final int height) {
-		final Orientation orientation = (width > height ? Orientation.HORIZONTAL : Orientation.VERTICAL);
-		createTestFrame(width, height, orientation);
+	private AlphaSlider<String> alphaslider;
+
+	@Before
+	public void setUp() {
+		alphaslider = new AlphaSlider<>(listOf(colors()));
 	}
 	
-	private void createTestFrame(final int width, final int height, final Orientation orientation) {
-		final JFrame frame = new JFrame("AlphaSlider");
-		frame.getContentPane().add(contentComponent(orientation));
-		frame.setPreferredSize(new Dimension(width, height));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		frame.pack();
+	private List<String> listOf(final String[] array) {
+		return Arrays.asList(array);
 	}
-	
-	private JComponent contentComponent(final Orientation orientation) {
-		final int margin = 10;
-		final JPanel contentPanel = new JPanel(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(margin, margin, margin, margin));
-		contentPanel.add(alphaSliderComponent(orientation), BorderLayout.CENTER);
-		return contentPanel;
+
+	private String[] colors() {
+		return new String[] { "red", "green", "blue", "orange", "purple" };
 	}
-	
-	private AlphaSlider<String> alphaSliderComponent(final Orientation orientation) {
-		String[] colourNames = new String[] {
-				"Black",
-				"Blue",
-				"Cyan",
-				"Gray",
-				"Green",
-				"Magenta",
-				"Orange",
-				"Pink",
-				"Red",
-				"White",
-				"Yellow"
-		};
-	   	final AlphaSlider<String> alphaSliderComponent = new AlphaSlider<>(orientation);
-		alphaSliderComponent.setValues(colourNames);
-		alphaSliderComponent.addEventListener(new AlphaSliderEventListener<String>() {
-			@Override
-			public void valueChanged(final AlphaSliderEvent<String> event) {
-				System.out.println(event.getCurrentValue());
-			}
-		});
-		return alphaSliderComponent;
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNull() {
+		new AlphaSlider<>((ArrayList<String>)null);
 	}
-	
-	public static void main(final String[] args) {
-		final int WIDTH = 800;
-		final int HEIGHT = 150;
-		new AlphaSliderTest(WIDTH, HEIGHT);
-		new AlphaSliderTest(HEIGHT, WIDTH);
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullSliderValues() {
+		new AlphaSlider<>(null, Orientation.HORIZONTAL);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullOrientation() {
+		new AlphaSlider<>(new ArrayList<String>(), null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testSetValuesWithNull() {
+		alphaslider.setValues((String [])null);
+	}
+
+	@Test
+	public void testSetToMinimumValue() {
+		alphaslider.setToMinimumValue();
+		assertEquals(alphaslider.getCurrentValue(), firstValue());
+	}
+
+	private String firstValue() {
+		return colors()[0];
+	}
+
+	@Test
+	public void testSetToMaximumValue() {
+		alphaslider.setToMaximumValue();
+		assertEquals(alphaslider.getCurrentValue(), lastValue());
+	}
+
+	private String lastValue() {
+		return colors()[colors().length - 1];
+	}
+
+	@Test
+	public void testSetAndGetCurrentValue() {
+		alphaslider.setCurrentValue(aValue());
+		assertEquals(alphaslider.getCurrentValue(), aValue());
+	}
+
+	private String aValue() {
+		return colors()[2];
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testSetCurrentValueNull() {
+		alphaslider.setCurrentValue(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testSetCurrentValueMissingValue() {
+		alphaslider.setCurrentValue("yellow");
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testAddNullEventListener() {
+		alphaslider.addEventListener(null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testRemoveNullEventListener() {
+		alphaslider.removeEventListener(null);
+	}
+
+	@Test
+	public void testNotifyEventListeners() {
+		final TestAlphaSliderEventListener<String> listener = new TestAlphaSliderEventListener<>();
+		alphaslider.addEventListener(listener);
+		alphaslider.notifyEventListeners(alphaSliderEvent());
+		assertTrue(listener.alphaSliderListenerWasInvoked);
+	}
+
+	private AlphaSliderEvent<String> alphaSliderEvent() {
+		return new AlphaSliderEvent<>(alphaslider, colors()[0]);
+	}
+
+	private class TestAlphaSliderEventListener<String> implements AlphaSliderEventListener<String> {
+		boolean alphaSliderListenerWasInvoked = false;
+		
+		@Override
+		public void valueChanged(final AlphaSliderEvent<String> event) {
+			alphaSliderListenerWasInvoked = true;
+		}
 	}
 }
