@@ -55,9 +55,6 @@ public class AlphaSlider<T> extends JPanel implements ChangeListener {
 	 * @throws NullPointerException		if orientation is null
 	 */
 	public AlphaSlider(final Orientation orientation) {
-//		if (orientation == null) {
-//			throw new NullPointerException("orientation cannot be null");
-//		}
 		this(new ArrayList<>(), orientation);
 	}
 
@@ -69,9 +66,6 @@ public class AlphaSlider<T> extends JPanel implements ChangeListener {
 	 * @throws NullPointerException		if sliderValues is null
 	 */
 	public AlphaSlider(final List<T> sliderValues) {
-//		if (sliderValues == null) {
-//			throw new NullPointerException("sliderValues cannot be null");
-//		}
 		this(sliderValues, Orientation.HORIZONTAL);
 	}
 

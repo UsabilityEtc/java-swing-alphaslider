@@ -31,7 +31,12 @@ public class AlphaSliderTest {
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testConstructorWithNull() {
+	public void testConstructorWithNullOrientationOnly() {
+		new AlphaSlider<>((Orientation)null);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullListOnly() {
 		new AlphaSlider<>((ArrayList<String>)null);
 	}
 
@@ -109,7 +114,7 @@ public class AlphaSliderTest {
 	}
 
 	private AlphaSliderEvent<String> alphaSliderEvent() {
-		return new AlphaSliderEvent<>(alphaslider, colors()[0]);
+		return new AlphaSliderEvent<>(alphaslider, aValue());
 	}
 
 	private class TestAlphaSliderEventListener<String> implements AlphaSliderEventListener<String> {
