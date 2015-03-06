@@ -5,6 +5,8 @@ import java.util.EventListener;
 /**
  * An AlphaSlider object notifies registered AlphaSliderEventListener
  * objects when the user changes the value of the AlphaSlider.
+ * 
+ * @author Jeffrey Morgan
  */
 public interface AlphaSliderEventListener<T> extends EventListener {
   /**

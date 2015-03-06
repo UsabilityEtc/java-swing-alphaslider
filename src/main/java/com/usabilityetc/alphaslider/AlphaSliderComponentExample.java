@@ -11,6 +11,8 @@ import com.usabilityetc.alphaslider.AlphaSlider.Orientation;
  * This class demonstrates the AlphaSlider class by creating one horizontal and one vertical AlphaSlider.
  * Each AlphaSlider is presented in its own JFrame and enables users to select from a list of color names.
  * The color name is displayed on the command line (or console) when the user changes the current color.
+ * 
+ * @author Jeffrey Morgan
  */
 public class AlphaSliderComponentExample {
    /**

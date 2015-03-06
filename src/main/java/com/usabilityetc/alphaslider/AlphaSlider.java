@@ -15,7 +15,6 @@ import javax.swing.event.*;
  * AlphaSliderEvent objects when the value of the slider changes.
  * 
  * @author Jeffrey Morgan
- *
  */
 public class AlphaSlider<T> extends JPanel implements ChangeListener {
   /**
